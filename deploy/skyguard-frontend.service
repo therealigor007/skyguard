@@ -1,0 +1,28 @@
+[Unit]
+Description=SkyGuard Frontend Service (Next.js)
+Documentation=https://github.com/therealigor007/skyguard
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/var/www/skyguard/skyguard-client
+Environment=NODE_ENV=production
+Environment=PORT=3000
+EnvironmentFile=-/var/www/skyguard/skyguard-client/.env.local
+ExecStart=/usr/bin/npm start
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=skyguard-frontend
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/www/skyguard/skyguard-client
+
+[Install]
+WantedBy=multi-user.target

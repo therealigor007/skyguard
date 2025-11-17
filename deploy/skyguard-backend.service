@@ -1,0 +1,28 @@
+[Unit]
+Description=SkyGuard Backend API Service
+Documentation=https://github.com/therealigor007/skyguard
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/var/www/skyguard/skyguard-bff
+Environment=NODE_ENV=production
+Environment=PORT=5000
+EnvironmentFile=-/var/www/skyguard/skyguard-bff/.env
+ExecStart=/usr/bin/node /var/www/skyguard/skyguard-bff/server.js
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=skyguard-backend
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/www/skyguard/skyguard-bff
+
+[Install]
+WantedBy=multi-user.target
