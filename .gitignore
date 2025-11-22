@@ -1,53 +1,27 @@
-# Dependencies
+Environment and build files
+
 /node_modules
-/.pnp
-.pnp.js
-.yarn/install-state.gz
-
-# Testing
-/coverage
-
-# Next.js
-/.next/
-/out/
-
-# Production
+/dist
 /build
 
-# Misc
+IDE and OS files
+
+.vscode/
 .DS_Store
-*.pem
+\*.swp
 
-# Debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
+Deployment scripts (keep the scripts themselves, but exclude logs/credentials)
 
-# Env files
+/deploy/\*.log
+
+Sensitive API keys should be stored in environment variables, not in this repo.
+
+If using a .env file:
+
 .env
-.env*.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# Vercel
-.vercel
-
-# TypeScript
-*.tsbuildinfo
-next-env.d.ts
-
-# IDE
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-.idea
-*.swp
-*.swo
-*~
-
-# OS
-Thumbs.db
+school
+school.pub
+_.pem
+_.key
+deploy/\*.log
+deploy/temp/

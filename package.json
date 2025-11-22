@@ -1,0 +1,14 @@
+{
+  "name": "skyguard",
+  "version": "1.0.0",
+  "description": "Disaster Response Flight Coordinator",
+  "main": "index.html",
+  "scripts": {
+    "start": "http-server -c-1 -o"
+  },
+  "author": "SkyGuard Team",
+  "license": "ISC",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SkyGuard - Disaster Response Flight Coordinator</title>
+
+    <!-- Leaflet CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+
+    <!-- Custom CSS (No Tailwind) -->
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <span class="logo-icon">✈️</span>
+        <h1>SkyGuard</h1>
+      </div>
+      <p class="tagline">Disaster Response Flight Coordinator</p>
+      <button id="refreshBtn" class="refresh-btn">🔄 Refresh Data</button>
+    </header>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="stat-icon">✈️</div>
+        <div class="stat-content">
+          <div class="stat-value" id="flightCount">-</div>
+          <div class="stat-label">Active Flights</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🌍</div>
+        <div class="stat-content">
+          <div class="stat-value" id="earthquakeCount">-</div>
+          <div class="stat-label">Earthquakes</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🔥</div>
+        <div class="stat-content">
+          <div class="stat-value" id="eventCount">-</div>
+          <div class="stat-label">Natural Events</div>
+        </div>
+      </div>
+      <div class="stat-card alert">
+        <div class="stat-icon">⚠️</div>
+        <div class="stat-content">
+          <div class="stat-value" id="alertCount">-</div>
+          <div class="stat-label">Flights at Risk</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-tabs">
+          <button class="tab-btn active" data-tab="filters">Filters</button>
+          <button class="tab-btn" data-tab="alerts">Alerts</button>
+          <button class="tab-btn" data-tab="search">Search</button>
+        </div>
+
+        <!-- Filters Tab -->
+        <div id="filters" class="tab-content active">
+          <h3>Display Options</h3>
+
+          <label class="checkbox-label">
+            <input type="checkbox" id="showFlights" checked />
+            <span>Show Flights</span>
+          </label>
+
+          <label class="checkbox-label">
+            <input type="checkbox" id="showEarthquakes" checked />
+            <span>Show Earthquakes</span>
+          </label>
+
+          <label class="checkbox-label">
+            <input type="checkbox" id="showEvents" checked />
+            <span>Show Natural Events</span>
+          </label>
+
+          <label class="checkbox-label">
+            <input type="checkbox" id="autoRefresh" />
+            <span>Auto-refresh (30s)</span>
+          </label>
+
+          <hr />
+
+          <h3>Earthquake Filters</h3>
+          <label>
+            Min Magnitude: <span id="magValue">4.5</span>
+            <input
+              type="range"
+              id="minMagnitude"
+              min="3"
+              max="7"
+              step="0.5"
+              value="4.5"
+            />
+          </label>
+
+          <label>
+            Time Range: <span id="daysValue">7</span> days
+            <input
+              type="range"
+              id="daysRange"
+              min="1"
+              max="30"
+              step="1"
+              value="7"
+            />
+          </label>
+
+          <hr />
+
+          <h3>Alert Radius</h3>
+          <label>
+            Distance: <span id="radiusValue">200</span> km
+            <input
+              type="range"
+              id="alertRadius"
+              min="50"
+              max="500"
+              step="50"
+              value="200"
+            />
+          </label>
+
+          <button id="applyFilters" class="apply-btn">Apply Filters</button>
+        </div>
+
+        <!-- Alerts Tab -->
+        <div id="alerts" class="tab-content">
+          <h3>Flights Near Disasters</h3>
+          <div id="alertsList" class="alerts-list">
+            <p class="loading-text">Click "Refresh Data" to analyze</p>
+          </div>
+        </div>
+
+        <!-- Search Tab -->
+        <div id="search" class="tab-content">
+          <h3>Search Flights</h3>
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Enter callsign (e.g., UAL123)..."
+            class="search-input"
+          />
+          <button id="searchBtn" class="apply-btn">Search</button>
+
+          <div id="searchResults" class="search-results">
+            <p class="info-text">Enter a callsign to search</p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Map Container -->
+      <main class="map-container">
+        <div id="map"></div>
+
+        <!-- Loading Overlay -->
+        <div id="loadingOverlay" class="loading-overlay">
+          <div class="spinner"></div>
+          <p>Loading data...</p>
+        </div>
+
+        <!-- Error Message -->
+        <div id="errorMessage" class="error-message" style="display: none">
+          <span id="errorText"></span>
+          <button id="closeError">✕</button>
+        </div>
+
+        <!-- Map Legend -->
+        <div class="map-legend">
+          <h4>Legend</h4>
+          <div class="legend-item">
+            <span class="legend-icon flight">✈️</span>
+            <span>Flights</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-icon earthquake">🌍</span>
+            <span>Earthquakes</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-icon event">🔥</span>
+            <span>Natural Events</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-icon alert">⚠️</span>
+            <span>High Risk</span>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>
+        Data sources:
+        <a href="https://opensky-network.org/" target="_blank"
+          >OpenSky Network</a
+        >
+        |
+        <a href="https://earthquake.usgs.gov/" target="_blank"
+          >USGS Earthquakes</a
+        >
+        |
+        <a href="https://eonet.gsfc.nasa.gov/" target="_blank">NASA EONET</a>
+      </p>
+      <p>
+        Built by <strong>therealigor007</strong> | Last updated:
+        <span id="lastUpdate">Never</span>
+      </p>
+    </footer>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Our JavaScript modules (ORDER MATTERS!) -->
+    <!-- NOTE: added type="module" so browser supports import/export -->
+    <script type="module" src="js/config.js"></script>
+    <script type="module" src="js/api.js"></script>
+    <script type="module" src="js/analysis.js"></script>
+    <script type="module" src="js/map.js"></script>
+    <script type="module" src="js/ui.js"></script>
+    <script type="module" src="js/app.js"></script>
+  </body>
+</html>
