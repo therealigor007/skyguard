@@ -3,6 +3,12 @@
 **SkyGuard** is a web application designed to enhance global situational awareness by tracking active flights and correlating their positions with current natural disaster zones. The primary goal is to provide a unified operational picture for disaster response and humanitarian aid coordination.
 
 # SkyGuard - Disaster Response Flight Coordinator Demo-Video: https://vimeo.com/1139608468/0c17a90da0
+
+# hosted link on web-01: http://44.204.88.221/skyguard/index.html
+# hosted link on web-02:http://52.91.16.179/skyguard/index.html
+# hosted link on lb-01:http://54.174.137.211/skyguard/index.html
+
+
 -----
 
 ## 1\. Features
